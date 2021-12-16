@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         check=findViewById(R.id.check);
-        if(keyCode==KeyEvent.KEYCODE_VOLUME_UP){
+        if(keyCode==KeyEvent.KEYCODE_VOLUME_UP){// this will be change to power button for the project
 
         n++;
         if(n==1){
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }.start();
         }
+
         if(n==5){
             check.setText("Emergency mode started"); // process after count for button is 5
             n=0;
