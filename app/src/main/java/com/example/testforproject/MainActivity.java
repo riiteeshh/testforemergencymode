@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.telephony.SmsManager;
 import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +22,9 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     TextView check;
     int n=0;// to check no of button press
-    String p ="9865762048";
+    public String p ="9865762048";
+    SmsManager smsManager = SmsManager.getDefault();
+
     @Override
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -58,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
                 else
                 ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},101);
 
+            // checking the permission for the sms system
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS)== PackageManager.PERMISSION_GRANTED){
+                sms();} // sms function
+            else
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.SEND_SMS},102);
 
             n=0;
 
@@ -69,14 +77,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+   
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==101 && grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){ // checking if the permission is granted
+        if(requestCode==101 && grantResults.length > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){ // checking if the permission is granted for call
             callPhone();
         }
         else
             Toast.makeText(this, "Please accept all the permissions", Toast.LENGTH_SHORT).show();
+
+        if(requestCode==102 && grantResults.length > 0 && grantResults[1]== PackageManager.PERMISSION_GRANTED){ // checking if the permission is granted for sms
+            sms();
+        }
+        else
+            Toast.makeText(this, "Please accept the permissions", Toast.LENGTH_SHORT).show();
     }
 
     private void callPhone() { // function to call
@@ -84,6 +100,15 @@ public class MainActivity extends AppCompatActivity {
         intent.setData(Uri.parse("tel: "+ p));
         startActivity(intent);
     }
+    // function ends
+
+        // function for sending sms
+    private void sms() {
+        smsManager.sendTextMessage(p, null, "tero dai hero ho", null, null);
+        Toast.makeText(this, "Sms mode on", Toast.LENGTH_SHORT).show();
+    }
+
+    // function ends
 
 
     @Override
